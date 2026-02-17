@@ -28,6 +28,8 @@ app.get('/', (req, res) => {
 // Proxy endpoint for Anthropic API
 app.post('/api/chat', async (req, res) => {
   console.log('Received chat request');
+  console.log('API Key present:', !!process.env.ANTHROPIC_API_KEY);
+  console.log('API Key starts with:', process.env.ANTHROPIC_API_KEY ? process.env.ANTHROPIC_API_KEY.substring(0, 20) : 'MISSING');
   
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -41,7 +43,8 @@ app.post('/api/chat', async (req, res) => {
     });
 
     const data = await response.json();
-    console.log('Anthropic API response received');
+    console.log('Anthropic response status:', response.status);
+    console.log('Anthropic response:', JSON.stringify(data).substring(0, 200));
     
     res.json(data);
   } catch (error) {
